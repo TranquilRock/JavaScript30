@@ -1,19 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>HTML5 Canvas</title>
 </head>
-<body>
-<canvas id="draw" width="800" height="800"></canvas>
-<script>
-</script>
 
-<style>
-  html, body {
-    margin: 0;
-  }
-</style>
+<body>
+  <canvas id="draw" width="800" height="800"></canvas>
+  <script>
+    const mCanvas = document.querySelector('#draw');
+    const ctx = mCanvas.getContext('2d');
+    mCanvas.width = window.innerWidth;
+    mCanvas.height = window.innerHeight;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    let drawing = false;
+    let lastX = 0, lastY = 0;
+    let hue = 0;
+    let w = 0;
+    function setPos(x, y) {
+      [lastX, lastY] = [x, y];
+    }
+    function draw(e) {
+      if (drawing) {
+        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.x, e.y);
+        ctx.stroke();
+        setPos(e.x, e.y);
+        hue = (hue + 1) % 360;
+        ctx.lineWidth = 10 * Math.sin(w++ / 10) + 15;
+      }
+    }
+
+    mCanvas.addEventListener("mousedown", (e) => {
+      drawing = true;
+      setPos(e.x, e.y);
+    });
+    mCanvas.addEventListener("mouseup", (e) => {
+      drawing = false;
+    });
+    mCanvas.addEventListener("mouseout", (e) => {//To avoid mouseup event happens out of canvas
+      drawing = false;
+      ctx.clearRect(0, 0, mCanvas.width, mCanvas.height);
+    });
+    mCanvas.addEventListener("mousemove", draw);
+  </script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+  </style>
 
 </body>
+
 </html>
