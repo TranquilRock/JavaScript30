@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Type Ahead 👀</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <form class="search-form">
@@ -14,9 +16,49 @@
       <li>or a state</li>
     </ul>
   </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  <script>
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+    const cities = [];
+    fetch(endpoint).then(blob => blob.json()).then(data => cities.push(...data));
+    //fetch retrun a promise inwhich the data provide json method to return json format of the fetched data.
+    //then activated when promise effective. 
+    //console.log(cities);
+    function findMatches(wordToMatch, cities) {
+      return cities.filter(place => {
+        const regex = new RegExp(wordToMatch, 'gi'); // g stands for global(whole string), i stands for case-insensitive
+        return place.city.match(regex) || place.state.match(regex);
+      });
+    }
 
-</script>
+    function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+  const searchInput = document.querySelector('.search');
+  const suggestions = document.querySelector('.suggestions');
+
+    function displatMatches() {
+      // console.log(findMatches(this.value, cities));
+      const matches = findMatches(this.value, cities);
+      const inner = matches.map(place => {
+        const regex = new RegExp(this.value, 'gi');
+        const cityHighLight = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+        const stateHighLight = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+        return `
+        <li>
+          <span class="name">${cityHighLight}, ${stateHighLight}</span>
+          <span class="population">${numberWithCommas(place.population)}</span>
+        </li>
+          `;
+      }).join('');//map method return an array, but we want an String here
+suggestions.innerHTML = inner;
+
+    }
+
+    
+    searchInput.addEventListener("keyup", displatMatches);
+    searchInput.addEventListener("change", displatMatches);
+  </script>
 </body>
+
 </html>
