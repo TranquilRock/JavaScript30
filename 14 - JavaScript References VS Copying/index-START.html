@@ -1,56 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>JS Reference VS Copy</title>
+    <meta charset="UTF-8">
+    <title>JS Reference VS Copy</title>
 </head>
+
 <body>
 
-  <script>
-    // start with strings, numbers and booleans
+    <script>
+        function showcase(before, after) {
+            var a1 = before;
+            var a2 = a1;
+            a1 = after;
+            console.log(a1, a2);
+        }
+        function showcaseRef(before, key, value) {
+            console.log("REF");
+            var a1 = before;
+            var a2 = a1;
+            a1[key] = value;
+            console.log(a1, a2);
+        }
+        function showcaseDeepCopy(before, key, value) {
+            console.log("COPY");
+            var a1 = before;
+            var a2 = Object.assign({}, a1);
+            a1[key] = value;
+            console.log(a1, a2);
+        }
+        function showcaseExpansion(before, key, value) {
+            console.log("EXPAND");
+            var a1 = before;
+            var a2 = { ...a1 };
+            a1[key] = value;
+            console.log(a1, a2);
+        }
+        function showcaseJson(before, key, value) {
+            console.log("JSON");
+            var a1 = before;
+            var a2 = JSON.parse(JSON.stringify(a1));
+            a1[key] = value;
+            console.log(a1, a2);
+        }
+        function showcaseRef2(before, key1, key2, value) {
+            console.log("REF");
+            var a1 = before;
+            var a2 = a1;
+            a1[key1][key2] = value;
+            console.log(a1, a2);
+        }
+        function showcaseDeepCopy2(before, key1, key2, value) {
+            console.log("COPY");
+            var a1 = before;
+            var a2 = Object.assign({}, a1);
+            a1[key1][key2] = value;
+            console.log(a1, a2);
+        }
+        function showcaseExpansion2(before, key1, key2, value) {
+            console.log("EXPAND");
+            var a1 = before;
+            var a2 = { ...a1 };
+            a1[key1][key2] = value;
+            console.log(a1, a2);
+        }
+        function showcaseJson2(before, key1, key2, value) {
+            console.log("JSON");
+            var a1 = before;
+            var a2 = JSON.parse(JSON.stringify(a1));
+            a1[key1][key2] = value;
+            console.log(a1, a2);
+        }
 
-    // Let's say we have an array
-    const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+        function primitives() {
+            console.groupCollapsed("PrimitiveTypes");
+            showcase(0, 1);
+            showcase("Hello", "ggwp");
+            showcase(true, false);
+            console.groupEnd("PrimitiveTypes");
 
-    // and we want to make a copy of it.
+        }
 
-    // You might think we can just do something like this:
+        function Arr() {
+            console.groupCollapsed("Array");
+            const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+            showcaseRef(Object.assign({}, players), 1, "Yasuo");
+            showcaseDeepCopy(Object.assign({}, players), 1, "Yasuo");
+            showcaseJson(Object.assign({}, players), 1, "Yasuo");
+            console.groupEnd("Array");
+        }
 
-    // however what happens when we update that array?
-
-    // now here is the problem!
-
-    // oh no - we have edited the original array too!
-
-    // Why? It's because that is an array reference, not an array copy. They both point to the same array!
-
-    // So, how do we fix this? We take a copy instead!
-
-    // one way
-
-    // or create a new array and concat the old one in
-
-    // or use the new ES6 Spread
-
-    // now when we update it, the original one isn't changed
-
-    // The same thing goes for objects, let's say we have a person object
-
-    // with Objects
-    const person = {
-      name: 'Wes Bos',
-      age: 80
-    };
-
-    // and think we make a copy:
-
-    // how do we take a copy instead?
-
-    // We will hopefully soon see the object ...spread
-
-    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
-
-  </script>
+        function Obj() {
+            const person = {
+                name: 'Wes Bos',
+                age: 80,
+                gooDeeper: {
+                    canYouTouchMe: "Not that easy~",
+                }
+            };
+            console.groupCollapsed("Object");
+            showcaseRef2(JSON.parse(JSON.stringify(person)), 'gooDeeper', 'canYouTouchMe', "Why can't?");
+            showcaseDeepCopy2(JSON.parse(JSON.stringify(person)), 'gooDeeper', 'canYouTouchMe', "Why can't?");
+            showcaseExpansion2(JSON.parse(JSON.stringify(person)), 'gooDeeper', 'canYouTouchMe', "Why can't?");
+            showcaseJson2(JSON.parse(JSON.stringify(person)), 'gooDeeper', 'canYouTouchMe', "Why can't?");
+            console.groupEnd("Object");
+        }
+        primitives();
+        Arr();
+        Obj();
+    </script>
 
 </body>
+
 </html>

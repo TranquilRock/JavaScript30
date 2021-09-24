@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Console Tricks!</title>
 </head>
+
 <body>
 
   <p onClick="makeGreen()">×BREAK×DOWN×</p>
-
+  <p onClick="clearAll()">CleanAll</p>
   <script>
     const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
 
@@ -18,29 +20,45 @@
     }
 
     // Regular
-
+    console.log("Message");
     // Interpolated
-
+    console.log("Message from %s", "Andy");//%s
+    const Name = "Andy";
+    console.log(`Message from ${Name}`);
     // Styled
-
+    console.log("%c Styled format", "font-size:10px; background:green; text-shadow: 3px 3px 0 yellow");//%c
     // warning!
-
+    console.warn("Everything still right?");
     // Error :|
-
+    console.error("GG something went wrong");
     // Info
-
-    // Testing
-
+    console.info("C8C8C8763");
+    // Testing(assert)
+    console.assert("CS" > "EE", "I dont agree with you.");
     // clearing
-
-    // Viewing DOM Elements
-
-    // Grouping together
-
+    function clearAll() {
+      console.clear();
+    }
+    // Viewing DOM Elements(dir)
+    const eles = document.querySelectorAll('p');
+    eles.forEach(ele => { console.dir(ele); });
+    // Grouping together(groupCollapsed/End)
+    dogs.forEach(dog => {
+      console.groupCollapsed(`${dog.name}`);
+      console.log("Hello~~");
+      console.log(`${dog.age}`);
+      console.groupEnd(`${dog.name}`);
+    });
     // counting
-
+    console.count("Chicken");
+    console.count("Chicken");
+    console.count("Yasuo");
+    console.count("Chicken");
     // timing
-
+    console.time("Time Label");
+    console.log("How long does it take?");
+    console.timeEnd("Time Label");
   </script>
 </body>
+
 </html>
